@@ -58,7 +58,9 @@ sqlite> EXPLAIN QUERY PLAN SELECT count(*) FROM big_cards;
 Record output below:
 
 ```
-
+QUERY PLAN
+`--SCAN TABLE big_cards
+Run Time: real 0.000 user 0.000092 sys 0.000000
 ```
 
 #### Using Indexes to improve performance
@@ -74,7 +76,9 @@ You suspect an index will help, but before you make any changes you want to get 
 Record output below:
 
 ```
-
+QUERY PLAN
+`--SCAN TABLE big_cards
+Run Time: real 0.001 user 0.000100 sys 0.000000
 ```
 
 You suspect that an index on the race column will help. Let's create it.
@@ -86,7 +90,9 @@ You suspect that an index on the race column will help. Let's create it.
 Record output below:
 
 ```
-
+QUERY PLAN
+`--SEARCH TABLE big_cards USING INDEX IDX1_big_cards (race=?)
+Run Time: real 0.000 user 0.000079 sys 0.000025
 ```
 
 Would it be possible to satisfy the query with an index only and further speed up the query?
@@ -98,7 +104,9 @@ Would it be possible to satisfy the query with an index only and further speed u
 Record output below:
 
 ```
-
+QUERY PLAN
+`--SEARCH TABLE big_cards USING COVERING INDEX IDX2_big_cards (race=?)
+Run Time: real 0.000 user 0.000086 sys 0.000020
 ```
 
 If you issue command `VACUUM big_cards;` and re-analyze you will likely see an explain plan that *is* satisfied by the index (and consequently much faster). However, subsequent updates to the table would cause this query to go back to the table to check the visibility map.
@@ -110,7 +118,9 @@ If you issue command `VACUUM big_cards;` and re-analyze you will likely see an e
 Record output below:
 
 ```
-
+QUERY PLAN
+`--SEARCH TABLE big_cards USING COVERING INDEX IDX2_big_cards (race=?)
+Run Time: real 0.034 user 0.000436 sys 0.031229
 ```
 
 #### The performance cost of Indexes 
@@ -126,7 +136,9 @@ Note the Execution time.
 Record output below:
 
 ```
-
+QUERY PLAN
+`--SCAN TABLE big_cards
+Run Time: real 0.000 user 0.000041 sys 0.000022
 ```
 
 
@@ -141,22 +153,23 @@ Now let's drop the indexes and try again:
 Record output below:
 
 ```
-
+QUERY PLAN
+`--SCAN TABLE big_cards
+Run Time: real 0.000 user 0.000100 sys 0.000000
 ```
 
 Does the update took less time without the indexes? 
 Your answer:
 ```
-
+The update takes the same amount of 'real' time (may be due to how .timer reportrs the 'real' time), but more 'user' time without the indexes. 
 ```
 
 Describe your findings of this Lab 5 from the recorded outputs, is everything working fine? or is anything not working? etc. Please indicate your SQLite version:
 
 ```
-SQLite version: 
-Findings:
-
-
+SQLite version: 3.26.0 2018-12-01 12:34:55 bf8c1b2b7a5960c282e543b9c293686dccff272512d08865f4600fb58238alt1
+Findings: All the commands ran fine, except the 'real' time reported by the built-in timer sometimes reported 0.000 when it must've taken some bit of time. This may be due to how
+SQLite's timer rounds its digits. Other than that, all commands executed with no issues.
 ```
 
 ps. Use this command to check your SQLite version. `sqlite3 --version`
