@@ -161,15 +161,17 @@ Run Time: real 0.000 user 0.000100 sys 0.000000
 Does the update took less time without the indexes? 
 Your answer:
 ```
-The update takes the same amount of 'real' time (may be due to how .timer reportrs the 'real' time), but more 'user' time without the indexes. 
+The update takes the same amount of 'real' time (may be due to how .timer reportrs the 'real' time), 
+but more 'user' time without the indexes. 
 ```
 
 Describe your findings of this Lab 5 from the recorded outputs, is everything working fine? or is anything not working? etc. Please indicate your SQLite version:
 
 ```
 SQLite version: 3.26.0 2018-12-01 12:34:55 bf8c1b2b7a5960c282e543b9c293686dccff272512d08865f4600fb58238alt1
-Findings: All the commands ran fine, except the 'real' time reported by the built-in timer sometimes reported 0.000 when it must've taken some bit of time. This may be due to how
-SQLite's timer rounds its digits. Other than that, all commands executed with no issues.
+Findings: All the commands ran fine, except the 'real' time reported by the built-in timer sometimes reported 0.000 when it must've 
+taken some bit of time. This may be due to howSQLite's timer rounds its digits. Other than that, all commands executed with no 
+issues.
 ```
 
 ps. Use this command to check your SQLite version. `sqlite3 --version`
